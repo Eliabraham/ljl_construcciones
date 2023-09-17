@@ -1,0 +1,277 @@
+<script src="../js/corporativa?v=1.0"></script>
+<div class='container my-3'>
+    <div class="row">
+        <h1 class="col-xxl-9 col-xl-9 col-lg-9 col-sm-12 h3 d-inline-block">
+            PLANILLA DE LA PAGINA
+        </h1>
+    </div>
+
+    <div class="tabset">
+        <!-- Tab 0 -->
+        <input type="radio" name="tabset" id="tab5" aria-controls="contacto" checked>
+        <label for="tab5">Misión</label>
+        <!-- Tab 1 -->
+        <input type="radio" name="tabset" id="tab1" aria-controls="contacto">
+        <label for="tab1">Visión</label>
+        <!-- Tab 2 -->
+        <input type="radio" name="tabset" id="tab2" aria-controls="estudio">
+        <label for="tab2">Historia</label>
+        <!-- Tab 3 -->
+        <input type="radio" name="tabset" id="tab3" aria-controls="estudio">
+        <label for="tab3">Valores</label>
+        <!-- Tab 4 -->
+        <input type="radio" name="tabset" id="tab4" aria-controls="estudio">
+        <label for="tab4">Jumbotrom</label>
+        <!-- Tab 5 -->
+        <input type="radio" name="tabset" id="tab6" aria-controls="estudio">
+        <label for="tab6">Contacto</label>
+        <!-- Tab 5 -->
+        <input type="radio" name="tabset" id="tab7" aria-controls="estudio">
+        <label for="tab7">Politicas Especiales</label>
+
+        <div class="tab-panels">
+            <!--MISION-->
+            <div class="tab-panel">
+                <form action="#" onsubmit="return false" method="post" name="fmision" id="fmision">
+                    <div class="form-group row">
+                        <input type="hidden" id="nim" name="nim"/>
+                        <label for="mision" class="col-12">
+                            Misión:
+                            <textarea maxlength="500" rows="6" name="valmision" id="mision" class="form-control form-control-sm" required>
+                            </textarea>
+                        </label>
+                        <label class="col-6">
+                            Seleccionar Imagen:<br/>
+                            <input type="file" accept="image/*" name="mision0" id="mision0" onchange="imagenmision(event,'fotografia_mision', this)">
+                        </label>    
+                        <label class="col-6">
+                            Mostrar Imagen:
+                            <select name="valmostrarfilemision" id="mostrarfilemision">
+                                <option>si</option>
+                                <option>no</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div id="fotografia_mision" class="row"></div>
+                    <center>
+                        <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngmision" name="btngmision">Guardar Misión</button>
+                    </center>
+                </form>        
+            </div>
+            <!--VISION-->
+            <div class="tab-panel">
+                <form action="#" onsubmit="return false" method="post" name="fvision" id="fvision">
+                    <div class="form-group row">
+                        <input type="hidden" id="niv" name="niv"/>
+                        <label for="vision" class="col-12">
+                            Visión:
+                            <textarea maxlength="500" name="valvision" rows="6" id="vision" class="form-control form-control-sm" required>
+                            </textarea>
+                        </label>
+                        <label class="col-6">
+                            Seleccionar Imagen:<br/>
+                            <input type="file" accept="image/*" name="vision0" id="vision0" onchange="imagenvision(event,'fotografia_vision', this)">
+                        </label>
+                        <label class="col-6" id="add_img_vision">
+                            Mostrar Imagen
+                            <select name="valmostrarfilevision" id="mostrarfilevision">
+                                <option>si</option>
+                                <option>no</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div id="fotografia_vision" class="row"></div>
+                    <center>
+                        <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngvision" name="btngvision">Guardar Visión</button>
+                    </center>
+                </form>        
+            </div>
+            <!--HISTORIA-->
+            <div class="tab-panel">
+                <form action="#" onsubmit="return false" method="post" name="fhistoria" id="fhistoria">
+                    <div class="form-group row">
+                        <input type="hidden" id="nih" name="nih"/>
+                        <label for="fhistoria" class="col-12">
+                            Historia:
+                            <textarea maxlength="500" rows="6" name="valhistoria" id="historia" class="form-control form-control-sm" required>
+                            </textarea>
+                        </label>
+                        <label class="col-6" id="add_img_vision">
+                            Seleccionar Imagen:<br/>
+                            <input type="file" accept="image/*" name="historia0" id="historia0" onchange="imagenhistoria(event,'fotografia_historia', this)">
+                        </label>
+                        <label class="col-6">
+                            Mostrar Imagen:
+                            <select name="valmostrarfilehistoria" id="mostrarfilehistoria">
+                                <option>si</option>
+                                <option>no</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div id="fotografia_historia" class="row"></div>
+                    <center>
+                        <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btnghistoria" name="btnghistoria">Guardar Historía</button>
+                    </center>
+                </form>
+            </div>
+            <!--VALORES-->
+            <div class="tab-panel">
+                <table class="table table-responsive table-striped table-hover table-sm " id="t_valores">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                <label for="valor_i">
+                                    Valor   
+                                </label>
+                            </th>
+                            <th>
+                                <label for="descripcion_v">
+                                    Descripción
+                                </label>
+                            </th>
+                            <th>
+                                <label>
+                                    Acc.
+                                </label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="search" maxlength="50" autocomplete="off" name="valvalor_i" id="valor_i" class="valor form-control form-control-sm "/>
+                            </td>
+                            <td>
+                                <input type="search" maxlength="150" autocomplete="off" name="valdescripcion_v" id="descripcion_v" class="valor form-control form-control-sm"/>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" id="add_valor" name="add_valor">+</button>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody contenteditable>
+                    </tbody>
+                </table>
+                <center>
+                    <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngvalores">Guardar Valores</button>
+                </center>
+            </div>
+            <!--JUMBOTRON-->
+            <div class="tab-panel">
+                <form action="#" onsubmit="return false" method="post" name="fjt" id="fjt">
+                    <div class="form-group row">
+                        <h5>
+                            IMAGEN EMPRESARIAL:
+                        </h5>
+                        <label class="col-12">
+                            Filosofia o Lema Empresarial ()  
+                            <textarea class="form-control form-control-sm" name="lema" id="lema" rows="6"></textarea>
+                        </label>
+                        <input type="hidden" id="nijt" name="nijt"/>
+                        <label for="desplegar" class="col-12">
+                            Desplegar Como:
+                            <select name="desplegar" id="deplagar">
+                                <option value="">--</option>
+                                <option>carrusel</option>
+                                <option>galeria</option>
+                            </select>
+                        </label>
+                        <label class="col-6">
+                            <input type="file" accept="image/*" name="jt0" id="jt0" onchange="imagenjt(event,'imgjumbo', this)">
+                        </label>
+                        <div id="imgjumbo" class="row"></div>
+                        <center>
+                            <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngjumbotrom">guardar Jumbotrom</button>
+                        </center>    
+                    </div>
+                </form>
+            </div>
+            <!--CONTACTO-->
+            <div class="tab-panel">
+                <table class="table table-responsive table-striped table-hover table-sm " id="t_contacto">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                <label for="valor_i">
+                                    Tipo   
+                                </label>
+                            </th>
+                            <th>
+                                <label for="descripcion_v">
+                                    Descripcion
+                                </label>
+                            </th>
+                            <th>
+                                <label>
+                                    Acc.
+                                </label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select name="valctipo" id="ctipo" class="contacto">
+                                    <option value="">--</option>
+                                    <option>Movil de Oficina</option>
+                                    <option>Fijo de Oficina</option>
+                                    <option>Fax</option>
+                                    <option>Email Empresarial</option>
+                                    <option>Red Social</option>
+                                    <option>Dirección Fisica</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="search" maxlength="50" autocomplete="off" name="valcontacto" id="contacto" class="form-control form-control-sm contacto">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" id="add_contacto" name="add_contacto">+</button>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody contenteditable>
+                    </tbody>
+                </table>
+                <center>
+                    <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngcontacto">Guardar Contactos</button>
+                </center>
+            </div>
+            <!--Politicas-->
+            <div class="tab-panel">
+                <table class="table table-responsive table-striped table-hover table-sm " id="t_politica">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                <label for="valor_i">
+                                    Asunto
+                                </label>
+                            </th>
+                            <th>
+                                <label for="descripcion_v">
+                                    Descripcion
+                                </label>
+                            </th>
+                            <th>
+                                <label>
+                                    Acc.
+                                </label>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="search" maxlength="50" autocomplete="off" name="valpol_asunto" id="pol_asunto" class="form-control form-control-sm politica">
+                            </td>
+                            <td>
+                                <input type="search" maxlength="50" autocomplete="off" name="valpol_descripcion" id="pol_desc" class="form-control form-control-sm politica">
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" id="add_politica" name="add_politica">+</button>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody contenteditable>
+                    </tbody>
+                </table>
+                <center>
+                    <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" id="btngpolitica">Guardar Politicas</button>
+                </center>
+            </div>            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,385 @@
+$(document).ready(function(){
+    $("#foto").on({
+        "onchange":function(){
+            $("#fotografia_carnet").html("");
+            previewImage(event, 'fotografia_carnet');
+        }
+    });
+    $("select").addClass("form-control form-control-sm");
+    $("#add_contacto").on({
+        "click":function(){
+            let datos = info.get_data(['contacto'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_contacto", datos["written"]);
+            info.clear_data(['contacto']);
+            $(`#ctipo`).focus();
+        }
+    });
+    $("#add-studies").on({
+        "click":function(){
+            let datos = info.get_data(['estudio'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_estudios", datos["written"]);
+            info.clear_data(['estudio']);
+            $(`#instituto`).focus();
+        }
+    });
+    $("#add_work_experience").on({
+        "click":function(){
+            let datos = info.get_data(['experiencia'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_experiencia", datos["written"]);
+            info.clear_data(['experiencia']);
+            $(`#empresa`).focus();
+        }
+    });
+    $("#add_projects").on({
+        "click":function(){
+            let datos = info.get_data(['proyecto'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_proyecto", datos["written"]);
+            info.clear_data(['proyecto']);
+            $(`#cliente`).focus();
+        }
+    });
+    $(`#guardar`).on({
+        "click":function(){
+            //datos personales______________________________________________________________
+            if($("#password").val().length<6){
+                $.notify("CONTRASEÑA MUY CORTA","warn");
+                throw'CONTRASEÑA MUY CORTA';
+            }else{
+                if($("#password").val()!=$("#confirm_password").val()){
+                    $.notify("CONTRASEÑAS NO COINCIDEN","warn");
+                    throw'CONTRASEÑAS NO COINCIDEN';
+                }
+            }
+            let datos = info.get_data(['dpersonal'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            //contactos_____________________________________________________________________
+            let contacto =info.get_data_table(`t_contacto`);
+            let jcontacto = JSON.stringify(contacto);
+            //estudios______________________________________________________________________
+            let estudios = info.get_data_table(`t_estudios`);
+            let jestudios = JSON.stringify(estudios);
+            //experiencias__________________________________________________________________
+            let experiencias = info.get_data_table(`t_experiencia`);
+            let jexperiencias = JSON.stringify(experiencias);
+            //proyectos_____________________________________________________________________
+            let proyectos = info.get_data_table(`t_proyecto`);
+            let jproyectos = JSON.stringify(proyectos);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action'      : datos.action,
+                    'valores'     : jvalores,
+                    'contacto'    : jcontacto,
+                    'estudios'    : jestudios,
+                    'experiencias': jexperiencias,
+                    'proyectos'   : jproyectos,
+                }
+            })
+            .done(function(resp){
+                $.notify(resp,"info");
+                guardar_fotografia();
+                $('#myModal').modal('toggle');
+                setTimeout("buscar_personal();",1000);
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    });
+    $(`#editar`).on({
+        "click":function(){
+            //datos personales______________________________________________________________
+            if($("#password").val().length<6){
+                $.notify("CONTRASEÑA MUY CORTA","warn");
+                throw'CONTRASEÑA MUY CORTA';
+            }else{
+                if($("#password").val()!=$("#confirm_password").val()){
+                    $.notify("CONTRASEÑAS NO COINCIDEN","warn");
+                    throw'CONTRASEÑAS NO COINCIDEN';
+                }
+            }
+            let datos = info.get_data(['dpersonal'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            //contactos_____________________________________________________________________
+            let contacto =info.get_data_table(`t_contacto`);
+            let jcontacto = JSON.stringify(contacto);
+            //estudios______________________________________________________________________
+            let estudios = info.get_data_table(`t_estudios`);
+            let jestudios = JSON.stringify(estudios);
+            //experiencias__________________________________________________________________
+            let experiencias = info.get_data_table(`t_experiencia`);
+            let jexperiencias = JSON.stringify(experiencias);
+            //proyectos_____________________________________________________________________
+            let proyectos = info.get_data_table(`t_proyecto`);
+            let jproyectos = JSON.stringify(proyectos);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action'      : datos.action,
+                    'valores'     : jvalores,
+                    'contacto'    : jcontacto,
+                    'estudios'    : jestudios,
+                    'experiencias': jexperiencias,
+                    'proyectos'   : jproyectos,
+                }
+            })
+            .done(function(resp){
+                $.notify(resp,"info");
+                guardar_fotografia();
+                $('#myModal').modal('toggle');
+                setTimeout("buscar_personal();",1000);
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    });
+    $("#addpersonal").on({
+        "click":function(){
+            $('#myModal').modal('toggle');
+            $("#guardar, #editar, #formUpload, .sencible").css({"visibility":"visible"});
+            $(".dpersonal").val("");
+            $(".contacto").val(""); 
+            $(".estudio").val("");
+            $(".experiencia").val("");
+            $(".proyecto").val("");
+            $(".table > tbody").html("");
+            $("#fotografia_carnet").html("");
+            $("#guardar").css({"visibility":"visible"});
+            $("#editar").css({"visibility":"hidden"});
+            $("#imagen").val("");
+            $("#name").focus();
+        }
+    });
+    $("#cm").on({
+        "click":function(){
+            $('#myModal').modal('toggle');
+        }
+    })
+    $("#name").on({
+        "keypress":function(){
+            return formato.only_letter(event);
+        },
+        "keyup":function(){
+            va = this.value;
+            $(this).val(formato.mayini(va));
+        }
+    })
+    $("#position").on({
+        "keyup":function(){
+            va = this.value;
+            $(this).val(formato.mayini(va));
+        }
+    })
+    buscar_personal();
+});
+function guardar_fotografia(){
+    if ($("#imgPreview0").length>0){
+        var formData = new FormData($("#formUpload")[0]);
+        formData.append("acc","personal");
+        try{
+            $.ajax({
+                type: "POST",
+                url: `../../controller/imagen_controller.php`,
+                data: formData,
+                contentType: false,
+                processData: false,
+            }).done(function(respuesta){
+                $.notify(respuesta,"info");
+                buscar_personal();
+            }).fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            });
+        }catch (error){
+            console.error(error);
+        }
+    }else{
+        buscar_personal();
+        $.notify("NO HA AGREGADO FOTOGRAFIA","info");
+    }
+}
+function add_ima_cv(){
+    $("#fotografia_carnet").html("");
+    previewImage(event, 'fotografia_carnet');
+}
+function buscar_personal(){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/PersonalResume_controller.php`,
+        data:{action:'buscar_personal'},
+    }).done(
+        function(resp){
+            $("#listado_personal").html(resp);
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+function eliminar_personal(a){
+    if (confirm("¿DESEA ELIMINAR ESTE REGISTRO?")){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/PersonalResume_controller.php`,
+            data:{
+                action:'eliminar_personal',
+                data:a.name
+            },
+        }).done(
+            function(resp){
+                $.notify(resp, "info");
+                buscar_personal();
+            }
+        ).fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    }
+}
+function capturar_personal(a){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/PersonalResume_controller.php`,
+        data:{
+            action:'capturar_personal',
+            data:a.name
+        },
+    }).done(
+        function(resp){
+            res=JSON.parse(resp);
+            $("#name").val(res[0][0]);
+            $("#position").val(res[0][1]);
+            $("#ingles").val(res[0][2]);
+            $("#fotografia_carnet").html(res[0][3]);
+            let contacto="";
+            let estudio="";
+            let experiencias="";
+            let proyecto =""
+            for(let i=0; i<res[1].length; i++){
+                contacto=`${contacto}<tr>
+                    <td contenteditable="true">${res[1][i]['type']}</td>
+                    <td contenteditable="true">${res[1][i]['content']}</td>
+                    <td contenteditable="true">${res[1][i]['schedule']}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="tabla.remove_row(this)">-</button>
+                    </td>
+                </tr>`;
+            }
+            for(let i=0; i<res[2].length; i++){
+                estudio=`${estudio}<tr>
+                    <td contenteditable="true">${res[2][i]['instituto']}</td>
+                    <td contenteditable="true">${res[2][i]['grado']}</td>
+                    <td contenteditable="true">${res[2][i]['anno']}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="tabla.remove_row(this)">-</button>
+                    </td>
+                </tr>`;
+            }
+            for(let i=0; i<res[3].length; i++){
+                experiencias=`${experiencias}<tr>
+                    <td contenteditable="true">${res[3][i]['empresa']}</td>
+                    <td contenteditable="true">${res[3][i]['cargo']}</td>
+                    <td contenteditable="true">${res[3][i]['area']}</td>
+                    <td contenteditable="true">${res[3][i]['annos']}</td>
+                    <td contenteditable="true">${res[3][i]['logros']}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="tabla.remove_row(this)">-</button>
+                    </td>
+                </tr>`;
+            }
+            for(let i=0; i<res[4].length; i++){
+                proyecto=`${proyecto}<tr>
+                    <td contenteditable="true">${res[4][i]['cliente']}</td>
+                    <td contenteditable="true">${res[4][i]['nombre']}</td>
+                    <td contenteditable="true">${res[4][i]['descripcion']}</td>
+                    <td contenteditable="true">${res[4][i]['participacion']}</td>
+                    <td contenteditable="true">${res[4][i]['logros']}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="tabla.remove_row(this)">-</button>
+                    </td>
+                </tr>`;
+            }
+            $("#t_contacto > tbody").html(contacto);
+            $("#t_estudios > tbody").html(estudio);
+            $("#t_experiencia > tbody").html(experiencias);
+            $("#t_proyecto > tbody").html(proyecto);
+            $('#myModal').modal('toggle');
+            $("#guardar, #editar, #formUpload, .sencible").css({"visibility":"visible"});
+            $("#guardar").css({"visibility":"hidden"});
+            $("#editar").css({"visibility":"visible"});
+
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+function capturar_ro_personal(a){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/PersonalResume_controller.php`,
+        data:{
+            action:'capturar_personal',
+            data:a.name
+        },
+    }).done(
+        function(resp){
+            res=JSON.parse(resp);
+            $("#name").val(res[0][0]);
+            $("#position").val(res[0][1]);
+            $("#ingles").val(res[0][2]);
+            $("#fotografia_carnet").html(res[0][3]);
+            let contacto="";
+            let estudio="";
+            let experiencias="";
+            let proyecto =""
+            for(let i=0; i<res[1].length; i++){
+                contacto=`${contacto}<tr>
+                    <td>${res[1][i]['type']}</td>
+                    <td>${res[1][i]['content']}</td>
+                    <td colspand='2'>${res[1][i]['schedule']}</td>
+                </tr>`;
+            }
+            for(let i=0; i<res[2].length; i++){
+                estudio=`${estudio}<tr>
+                    <td>${res[2][i]['instituto']}</td>
+                    <td>${res[2][i]['grado']}</td>
+                    <td colspand='2'>${res[2][i]['anno']}</td>
+                </tr>`;
+            }
+            for(let i=0; i<res[3].length; i++){
+                experiencias=`${experiencias}<tr>
+                    <td >${res[3][i]['empresa']}</td>
+                    <td >${res[3][i]['cargo']}</td>
+                    <td >${res[3][i]['area']}</td>
+                    <td >${res[3][i]['annos']}</td>
+                    <td colspand='2'>${res[3][i]['logros']}</td>
+                </tr>`;
+            }
+            for(let i=0; i<res[4].length; i++){
+                proyecto=`${proyecto}<tr>
+                    <td >${res[4][i]['cliente']}</td>
+                    <td >${res[4][i]['nombre']}</td>
+                    <td >${res[4][i]['descripcion']}</td>
+                    <td >${res[4][i]['participacion']}</td>
+                    <td colspan='2'>${res[4][i]['logros']}</td>
+                </tr>`;
+            }
+            $("#t_contacto > tbody").html(contacto);
+            $("#t_estudios > tbody").html(estudio);
+            $("#t_experiencia > tbody").html(experiencias);
+            $("#t_proyecto > tbody").html(proyecto);
+            $('#myModal').modal('toggle');
+            $("#guardar, #editar, #formUpload, .sencible").css({"visibility":"hidden"});
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+
+

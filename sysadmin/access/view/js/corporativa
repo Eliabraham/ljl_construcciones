@@ -1,0 +1,442 @@
+$(document).ready(function(){
+    $("select").addClass("form-control form-control-sm");
+    buscar_v();
+    buscar_m();
+    buscar_h();
+    buscar_vl();
+    buscar_jt();
+    buscar_ct();
+    buscar_pl();
+    $("#btngmision").on({
+        "click":function(){
+            formdata=new FormData($('#fmision')[0]);
+            formdata.append("accion","mision");
+            $.ajax({
+                type: "POST",
+                url: "../../controller/corporativa_controller.php",
+                data: formdata,
+                contentType: false,
+                processData: false,
+            }).done(
+                function(respuesta){
+                    $.notify(respuesta, "info");
+                    buscar_m();
+                    let i=1
+                    while ($(`#photo${i}`).length>0){
+                        $(`#photo${i}`).remove();
+                        i++;
+                    }
+                }
+            ).fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            });
+        }
+    });
+    $("#btngvision").on({
+        "click":function(){
+            formdata=new FormData($('#fvision')[0]);
+            formdata.append("accion","vision");
+            $.ajax({
+                type: "POST",
+                url: "../../controller/corporativa_controller.php",
+                data: formdata,
+                contentType: false,
+                processData: false,
+            }).done(
+                function(respuesta){
+                    $.notify(respuesta, "info");
+                    let i=1
+                    while ($(`#photo${i}`).length>0){
+                        $(`#photo${i}`).remove();
+                        i++;
+                    }
+                    buscar_v();
+                }
+            ).fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            });
+        }
+    })
+    $("#btnghistoria").on({
+        "click":function(){
+            formdata=new FormData($('#fhistoria')[0]);
+            formdata.append("accion","historia");
+            $.ajax({
+                type: "POST",
+                url: "../../controller/corporativa_controller.php",
+                data: formdata,
+                contentType: false,
+                processData: false,
+            }).done(
+                function(respuesta){
+                    $.notify(respuesta, "info");
+                    let i=1
+                    while ($(`#photo${i}`).length>0){
+                        $(`#photo${i}`).remove();
+                        i++;
+                    }
+                    buscar_h();
+                }
+            ).fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            });
+        }
+    });
+    $("#add_valor").on({
+        "click":function(){
+            let datos = info.get_data(['valor'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_valores", datos["written"]);
+            info.clear_data(['valor']);
+            $(`#valor_i`).focus();
+        }
+    });
+    $("#btngvalores").on({
+        "click":function(){
+            let valores = info.get_data_table(`t_valores`);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/corporativa_controller.php`,
+                data:{
+                    'accion'      : 'valores',
+                    'valores'     : valores,
+                }
+            })
+            .done(function(resp){
+                console.log(resp);
+                $.notify(resp, "info");
+                buscar_vl();
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    });
+    $("#btngjumbotrom").on({
+        "click":function(){
+            formdata=new FormData($('#fjt')[0]);
+            formdata.append("accion","jumbotrom");
+            $.ajax({
+                type: "POST",
+                url: "../../controller/corporativa_controller.php",
+                data: formdata,
+                contentType: false,
+                processData: false,
+            }).done(
+                function(respuesta){
+                    $.notify(respuesta, "info");
+                    buscar_jt();
+                }
+            ).fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            });
+        }
+    });
+    $("#add_contacto").on({
+        "click":function(){
+            let datos = info.get_data(['contacto'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_contacto", datos["written"]);
+            info.clear_data(['contacto']);
+            $(`#ctipo`).focus();
+        }
+    });
+    $("#add_politica").on({
+        "click":function(){
+            let datos = info.get_data(['politica'],this);
+            info.request_missing_data(datos.err);
+            tabla.add_row("t_politica", datos["written"]);
+            info.clear_data(['politica']);
+            $(`#ctipo`).focus();
+        }
+    });
+    $("#btngcontacto").on({
+        "click":function(){
+            let contacto =info.get_data_table(`t_contacto`);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/corporativa_controller.php`,
+                data:{'contacto' : contacto,'accion':'contacto'},
+            })
+            .done(function(resp){
+                $.notify(resp,"info");
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    });
+    $("#btngpolitica").on({
+        "click":function(){
+            let politica =info.get_data_table(`t_politica`);
+            console.log(politica);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/corporativa_controller.php`,
+                data:{'politica' : politica,'accion':'politica'},
+            })
+            .done(function(resp){
+                $.notify(resp,"info");
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    })
+
+});
+function buscar_v(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_vision'},
+    }).done(
+        function(respuesta){
+            if(respuesta.length>0){
+                res = (JSON.parse(respuesta));
+                $("#vision").val(res['descripcion']);
+                $("#fotografia_vision").html(res['imagenes']);
+            }
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_m(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_mision'},
+    }).done(
+        function(respuesta){
+            if(respuesta.length>0){
+                res = (JSON.parse(respuesta));
+                $("#mision").val(res['descripcion']);
+                $("#fotografia_mision").html(res['imagenes']);
+            }
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_h(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_historia'},
+    }).done(
+        function(respuesta){
+            if(respuesta.length>0){
+                res = JSON.parse(respuesta);
+                $("#historia").val(res['descripcion']);
+                $("#fotografia_historia").html(res['imagenes']);
+            }
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_vl(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_valores'},
+    }).done(function(respuesta){
+        if(respuesta.length>0){
+            let tx="";
+            respuesta=JSON.parse(respuesta);
+            for(i=0;i<respuesta.length;i++){
+                let nam = (respuesta[i]['c_name']).split("_");
+                tx=`${tx}<tr>
+                    <td>${nam[1]}</td>
+                    <td>${respuesta[i]['c_description']}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="tabla.remove_row(this)">
+                            -
+                        </button>
+                    </td>
+                </tr>`;
+            }
+            $("#t_valores > tbody").html(tx);
+        }
+    }).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_ct(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_contactos'},
+    }).done(function(respuesta){
+        if(respuesta.length>0){
+            let tx="";
+            respuesta=JSON.parse(respuesta);
+            for(i=0;i<respuesta.length;i++){
+                let nam = (respuesta[i]['c_name']).split("_");
+                tx=`${tx}<tr>
+                    <td>${nam[1]}</td>
+                    <td>${respuesta[i]['c_description']}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="tabla.remove_row(this)">
+                            -
+                        </button>
+                    </td>
+                </tr>`;
+            }
+            $("#t_contacto > tbody").html(tx);
+        }
+    }).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_pl(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_politica'},
+    }).done(function(respuesta){
+        if(respuesta.length>0){
+            let tx="";
+            respuesta=JSON.parse(respuesta);
+            for(i=0;i<respuesta.length;i++){
+                let nam = (respuesta[i]['c_name']).split("_");
+                tx=`${tx}<tr>
+                    <td>${nam[1]}</td>
+                    <td>${respuesta[i]['c_description']}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="tabla.remove_row(this)">
+                            -
+                        </button>
+                    </td>
+                </tr>`;
+            }
+            $("#t_politica > tbody").html(tx);
+        }
+    }).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function buscar_jt(){
+    $.ajax({
+        type: "POST",
+        url: "../../controller/corporativa_controller.php",
+        data:{'accion':'buscar_jt'},
+    }).done(
+        function(respuesta){
+            if(respuesta.length>0){
+                res = (JSON.parse(respuesta));
+                $("#imgjumbo").html(res['imagenes']);
+                $("#lema").val(res['descripcion']);
+                let mo=res["c_name"].split("-");
+                $("#deplagar").val(mo[1]);
+            }
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    });
+}
+function delphoto(t){
+    if(confirm("¿DESEA ELIMINAR ESTA IMAGEN?")){
+        $.ajax({
+            type: "POST",
+            url: "../../controller/corporativa_controller.php",
+            data:{'accion':'del_imagen','id':t},
+        }).done(
+            function(resp){
+                $.notify(resp, "info");
+                buscar_v();
+                buscar_m();
+                buscar_h();
+                buscar_jt();
+            }
+        ).fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        });
+    }
+}
+function imagenmision(event, querySelector, t){
+	const input = event.target;
+    let n=t.name;
+    let i=t.id;
+    nim=$(`#nim`).val();
+    if(nim==""){nim=1;}else{nim++;}
+    $(`#nim`).val(nim);
+    onc=$(t).attr("onchange");
+	file = input.files[0];
+	objectURL = URL.createObjectURL(file);
+    $(t).css({"display":"none"});
+    t.name=`photo${nim}`;
+    t.id=`photo${nim}`;
+    $(t).parent().append(`<input type="file" accept="image/*" name="${n}" id="${i}" onchange="${onc}">`)
+    ima=`<div class="col-xxl-3 col-xl-3 col-lg-5 col-sm-10 btn btn-primary">
+		<img id="imgPreview${nim}" src="${objectURL}" class="col-12"></img>
+        <input type="search" placeholder="DESCRIPCION DE FOTOGRAFIA" id="description_file_${nim}" name="description_file_${nim}" class="desfil${n} form-control form-control-sm"/>
+		</div>`;
+	$(`#${querySelector}`).append(ima);
+    $(`#formUpload${t.name}`).append(t);
+}
+function imagenvision(event, querySelector, t){
+	const input = event.target;
+    let n=t.name;
+    let i=t.id;
+    niv=$(`#niv`).val();
+    if(niv==""){niv=1;}else{niv++;}
+    $(`#niv`).val(niv);
+    onc=$(t).attr("onchange");
+	file = input.files[0];
+	objectURL = URL.createObjectURL(file);
+    $(t).css({"display":"none"});
+    t.name=`photo${niv}`;
+    t.id=`photo${niv}`;
+    $(t).parent().append(`<input type="file" accept="image/*" name="${n}" id="${i}" onchange="${onc}">`)
+    ima=`<div class="col-xxl-3 col-xl-3 col-lg-5 col-sm-10 btn btn-primary">
+		<img id="imgPreview${niv}" src="${objectURL}" class="col-12"></img>
+        <input type="search" placeholder="DESCRIPCION DE FOTOGRAFIA" id="description_file_${niv}" name="description_file_${niv}" class="desfil${n} form-control form-control-sm"/>
+		</div>`;
+	$(`#${querySelector}`).append(ima);
+    $(`#formUpload${t.name}`).append(t);
+}
+function imagenhistoria(event, querySelector, t){
+	const input = event.target;
+    let n=t.name;
+    let i=t.id;
+    nih=$(`#nih`).val();
+    if(nih==""){nih=1;}else{nih++;}
+    $(`#nih`).val(nih);
+    onc=$(t).attr("onchange");
+	file = input.files[0];
+	objectURL = URL.createObjectURL(file);
+    $(t).css({"display":"none"});
+    t.name=`photo${nih}`;
+    t.id=`photo${nih}`;
+    $(t).parent().append(`<input type="file" accept="image/*" name="${n}" id="${i}" onchange="${onc}">`)
+    ima=`<div class="col-xxl-3 col-xl-3 col-lg-5 col-sm-10 btn btn-primary">
+		<img id="imgPreview${nih}" src="${objectURL}" class="col-12"></img>
+        <input type="search" placeholder="DESCRIPCION DE FOTOGRAFIA" id="description_file_${nih}" name="description_file_${nih}" class="desfil${n} form-control form-control-sm"/>
+		</div>`;
+	$(`#${querySelector}`).append(ima);
+    $(`#formUpload${t.name}`).append(t);
+}
+function imagenjt(event, querySelector, t){
+	const input = event.target;
+    let n=t.name;
+    let i=t.id;
+    nijt=$(`#nijt`).val();
+    if(nijt==""){nijt=1;}else{nijt++;}
+    $(`#nijt`).val(nijt);
+    onc=$(t).attr("onchange");
+	file = input.files[0];
+	objectURL = URL.createObjectURL(file);
+    $(t).css({"display":"none"});
+    t.name=`photo${nijt}`;
+    t.id=`photo${nijt}`;
+    $(t).parent().append(`<input type="file" accept="image/*" name="${n}" id="${i}" onchange="${onc}">`)
+    ima=`<div class="col-xxl-3 col-xl-3 col-lg-5 col-sm-10 btn btn-primary">
+		<img id="imgPreview${nijt}" src="${objectURL}" class="col-12"></img>
+        <input type="search" placeholder="DESCRIPCION DE FOTOGRAFIA" id="description_file_${nijt}" name="description_file_${nijt}" class="desfil${n} form-control form-control-sm"/>
+		</div>`;
+	$(`#${querySelector}`).append(ima);
+    $(`#formUpload${t.name}`).append(t);
+}
+

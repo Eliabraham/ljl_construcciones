@@ -1,0 +1,102 @@
+<script src="../js/jsadminproyectos?v=1.39"></script>
+<div class='container my-3'>
+    <div class="row">
+        <h1 class="col-xxl-9 col-xl-9 col-lg-9 col-lg-8 col-sm-12 h3 d-inline-block">PLANILLA DE PROYECTOS</h1>
+        <button class="btn btn-primary col-xxl-3 col-xl-3 col-lg-3 col-sm-10" data-toggle="modal" data-target=".bd-example-modal-lg" id="addproyecto">Agregar</button>
+        <div id="area_proyectos" class="row col-12 my-3"></div>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Datos Generales Del Proyecto</h5>
+                <button type="button" class="close" id="cm" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="name">Nombre del Proyecto:</label>
+                            <input type="search" maxlength="50" autocomplete="off" name="valname" id="name" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="direction">Dirección del Proyecto:</label>
+                            <input type="search" maxlength="150" autocomplete="off" name="valdirection" id="direction" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="start_date">Fecha de inicio:</label>
+                            <input type="date" maxlength="10" autocomplete="off" name="valstart_date" id="start_date" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12" for="">         
+                            <label for="stop_date">Fecha de Termino:</label>
+                            <input type="date" maxlength="10" autocomplete="off" name="valstop_date" id="stop_date" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label  for="stage_number">Total Etapas</label>
+                            <input type="number" min="1" max="100" autocomplete="off" name="valstage_number" id="stage_number" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12" for="current_stage">
+                            <label for="current_stage">Etapa actual</label>
+                            <input type="search" maxlength="25" autocomplete="off" name="valcurrent_stage" id="current_stage" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="status">Status</label>
+                            <input type="search" maxlength="10" autocomplete="off" name="valstatus" id="status" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="show">Mostrar Publicamente</label>
+                            <select name="valshow" id="show" class="proyecto">
+                                <option value="">--</option>
+                                <option>Publico</option>
+                                <option>Privado</option>
+                                <option>Confidencial</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="category">Categoria</label>
+                            <select name="valcategory" id="category" class="proyecto form-control form-control-sm">
+                                <option value="">--</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="descripcion">Descripción Detallada del Proyecto:</label>
+                            <textarea maxlength="350" name="valdescription" id="description" rows="6" class="proyecto form-control form-control-sm"></textarea>
+                        </div>
+                        <center>
+                            <button class="btn btn-primary col-6" id="guardar" name="projects">GUARDAR</button>
+                            <button class="btn btn-primary col-6" id="editar" name="projects">EDITAR</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal-etapas" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" id="cm1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <label class="col-12" id="pr_description"></label>
+                        <label class="col-12" id="pr_direction"></label>
+                        <label class="col-6" id="pr_start_date"></label>
+                        <label class="col-6" id="pr_stop_date"></label>
+                        <input type="hidden" id="id_proyecto"/>
+                        <div class="tabset"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

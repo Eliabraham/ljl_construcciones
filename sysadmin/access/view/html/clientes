@@ -1,0 +1,134 @@
+<script src="../js/jsadminclientes?v=1.0"></script>
+<div class='container'>
+    <div class="row">
+        <h1 class="col-9">ADMINISTRACION DE CLIENTES</h1>
+    </div>
+    <?php
+        include_once(__DIR__."/../../../../model/bd_show.php");
+        include_once(__DIR__."/../../../../model/mprincipal.php");
+        $model=new ProgramModel;
+        $sql="SELECT * FROM tbl_solicitud WHERE estado='pendiente'";
+        $captura=$model->capturar($sql);
+    ?>
+    <div class="card-container col-12" >
+        <?php foreach ($captura as $elemento) { ?>
+            <div class="card col-xxl-4 col-xl-5 col-lg-5 col-sm-12 lead" style="float:left">
+                <div class="container p-4">
+                    <div><strong>Nombre:</strong> <?php echo $elemento['nombre']; ?></div>
+                    <div><strong>Apoderado:</strong> <?php echo $elemento['apoderado']; ?></div>
+                    <div><strong>Telefono:</strong> <?php echo $elemento['telefono']; ?></div>
+                    <div><strong>Correo:</strong> <?php echo '<a href="mailto:'.$elemento['correo'].'">'.$elemento['correo'].'</a>'; ?></div>
+                    <div><strong>Descripcion:</strong><?php echo $elemento['descripcion']; ?></div>
+                    <div><strong>Estado:</strong><?php echo $elemento['estado']; ?></div>
+                    <div><strong>Fecha de Solicitud:</strong><?php echo $elemento['fecha_registro']; ?></div>
+                    <?php 
+                        $sgl ="SELECT * FROM tbl_solicitud_file WHERE id_solicitu=".$elemento['id_solicitud'];
+                        $captura=$model->capturar($sgl);
+                        for($i=0;$i<count($captura);$i++){
+                            print('<img class="d-block w-100" style="height:180px" src="data:image/jpeg;base64,'.base64_encode($captura[$i]["archivo"]).'" alt="imagen1">');
+                        }
+                    ?>
+                </div>
+                <center>
+                    <button class="btn btn-danger" onclick="eliminar(this)" name="<?php echo $elemento['id_solicitud']; ?>">Eliminar</button>
+                    <button class="btn btn-primary" onclick="minuta(this)" name="<?php echo $elemento['id_solicitud']; ?>">Nota</button>
+                    <button class="btn btn-primary" onclick="proyecto(this)" name="<?php echo $elemento['id_solicitud']; ?>">Proyecto</button>
+                </center>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modal_minuta" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <label class="col-11" id="ct_nombre"></label>
+                        <button type="button" class="close btn btn-danger btn-sm" style="width:40px; color:#fff; font-size:20px" onclick="cm_minuta()" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <label class="col-12" id="ct_estado"></label>
+                        <label class="col-6" id="ct_fecha"></label>
+                        <label class="col-6" id="ct_correo"></label>
+                        <label class="col-6" id="ct_telefono"></label>
+                        <label class="col-6" id="ct_descripcion"></label>
+                        <textarea id="texto_minuta" class="form-control form-control-sm col-12" maxlength='580' rows="5" placeholder="AGREGUE ACA LOS COMENTARIOS DE LA REUNION SOSTENIDA (570 letras)"></textarea>
+                        <center>
+                            <button class="btn btn-primary col-4" id="btn_ac_min" onclick='gminuta(this)'>Aceptar</button>
+                        </center>
+                    </div>
+                    <div id='lista_minutas'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModalp" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Datos Generales Del Proyecto</h5>
+                <button type="button" class="close" onclick="cm2()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="name">Nombre del Proyecto:</label>
+                            <input type="search" maxlength="50" autocomplete="off" name="valname" id="name" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="direction">Dirección del Proyecto:</label>
+                            <input type="search" maxlength="150" autocomplete="off" name="valdirection" id="direction" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="start_date">Fecha de inicio:</label>
+                            <input type="date" maxlength="10" autocomplete="off" name="valstart_date" id="start_date" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12" for="">         
+                            <label for="stop_date">Fecha de Termino:</label>
+                            <input type="date" maxlength="10" autocomplete="off" name="valstop_date" id="stop_date" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label  for="stage_number">Total Etapas</label>
+                            <input type="number" min="1" max="100" autocomplete="off" name="valstage_number" id="stage_number" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12" for="current_stage">
+                            <label for="current_stage">Etapa actual</label>
+                            <input type="search" maxlength="25" autocomplete="off" name="valcurrent_stage" id="current_stage" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="status">Status</label>
+                            <input type="search" maxlength="10" autocomplete="off" name="valstatus" id="status" class="proyecto form-control form-control-sm">
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="show">Mostrar Publicamente</label>
+                            <select name="valshow" id="show" class="proyecto">
+                                <option value="">--</option>
+                                <option>Publico</option>
+                                <option>Privado</option>
+                                <option>Confidencial</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="category">Categoria</label>
+                            <select name="valcategory" id="category" class="proyecto form-control form-control-sm">
+                                <option value="">--</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="descripcion">Descripción Detallada del Proyecto:</label>
+                            <textarea maxlength="350" name="valdescription" id="description" rows="6" class="proyecto form-control form-control-sm"></textarea>
+                        </div>
+                        <center>
+                            <button class="btn btn-primary col-6" id="guardar_pro" onclick="gpro()" name="projects">GUARDAR</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+$(document).ready(function(){
+    listar_categorias();
+});
+function eliminar(a){
+    if(confirm('Desea Eliminar Esta Solicitud')){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/solicitudes_controller.php`,
+            data:{
+                'action' : 'eliminar',
+                'valores': a.name,
+            }
+        })
+        .done(function(resp){
+            console.log(resp);
+            if(resp=='eliminado'){
+                $.notify("Solicitud eliminada satisfactoriamente", "info");
+                $(a).parent().parent().remove();
+            }
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    }
+}
+function cm_minuta(){
+    $('#modal_minuta').modal('toggle');
+}
+function cm2(){
+    $('#myModalp').modal('toggle');
+}
+function minuta(a){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/solicitudes_controller.php`,
+        data:{
+            'action' : 'minuta',
+            'valores': a.name,
+        }
+    })
+    .done(function(resp){
+        resp=JSON.parse(resp);
+        $("#ct_nombre").html(resp[0]['nombre']);
+        $("#ct_estado").text(resp[0]['estado']);
+        $("#ct_fecha").text(resp[0]['fecha_registro']);
+        $("#ct_correo").text(resp[0]['correo']);
+        $("#ct_telefono").text(resp[0]['telefono']);
+        $("#ct_descripcion").text(resp[0]['descripcion']);
+        $("#modal_minuta").modal('show');
+        $("#btn_ac_min").prop('name',resp[0]['id_solicitud']);
+        bminuta(resp[0]['id_solicitud']);
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+function gminuta(a){
+    if($("#texto_minuta").val()!=""){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/solicitudes_controller.php`,
+            data:{
+                'action' : 'gminuta',
+                'id':a.name,
+                'valores': $("#texto_minuta").val(),
+            }
+        })
+        .done(function(resp){
+            $.notify(resp, "info");
+            bminuta(a.name);
+            $("#texto_minuta").val("").focus();
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    }
+    else{
+        $.notify("NO HA INGRESADO TEXTO PARA GUARDAR","info");
+    }
+}
+function bminuta(b){
+    $("#lista_minutas").html("");
+    $.ajax({
+        type: "POST",
+        url: `../../controller/solicitudes_controller.php`,
+        data:{
+            'action' : 'bminuta',
+            'id':b,
+        }
+    })
+    .done(function(resp){
+        resp=JSON.parse(resp);
+        for(let i=0;i<resp.length;i++){
+            let dv=`<div class="card">
+                <div class="card-body">
+                    <label class="card-title col-11 lead my-2" style="font-size:16px">${resp[i]['fecha_hora']}</label>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminar_nota(${resp[i]['id']}, ${b})">x</button>
+                    <p class="card-text" style="text-align:justify; font-size:13px">${resp[i]['minuta']}</p>
+                </div>
+            </div>`;
+            $("#lista_minutas").append(dv);
+        }
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+function eliminar_nota(id, sol){
+    if(confirm('Desea Eliminar Esta Nota')){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/solicitudes_controller.php`,
+            data:{
+                'action' : 'eliminar_nota',
+                'valores': id,
+            }
+        })
+        .done(function(resp){
+            if(resp=='eliminado'){
+                $.notify("Nota sobre solicitud eliminada satisfactoriamente", "info");
+                bminuta(sol);
+            }
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    } 
+}
+function proyecto(a){
+    $("#show").removeClass("form-control form-control-sm").addClass("form-control form-control-sm")
+    $("#myModalp").modal("show");
+}
+function gpro(){
+    let datos = info.get_data(['proyecto'],this);
+    info.request_missing_data(datos.err);
+    let jvalores = JSON.stringify(datos.written);
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{
+            'action': 'guardar',
+            'valores': jvalores,
+        }
+    })
+    .done(function(resp){
+        $.notify(resp, "info");
+        $(".proyecto").val("");
+        $("#myModalp").modal("toggle");
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}
+function listar_categorias(){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{'action':'listar_categorias'}
+    })
+    .done(function(resp){
+        $("#category").html("");
+        let opt = JSON.parse(resp);
+        let hopt=`<option value=''>--</option>`;
+        for(let i=0;i<opt.length; i++){
+            hopt=`${hopt}<option value="${opt[i]['id_category']}">${opt[i]['ct_name']}</option>`;
+        }
+        $("#category").append(hopt);
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}

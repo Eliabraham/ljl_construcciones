@@ -1,0 +1,277 @@
+@font-face {
+  font-family: urban_sketch;
+  src: url(../font/urban_sketch/Urban.ttf);
+}
+.urban_sketch{
+  font-family: urban_sketch;
+  color: #121212;
+}
+@font-face {
+  font-family: tk-architect;
+  src: url(../font/tk-architect/tk-architect.ttf);
+}
+.tk-architect{
+  font-family: tk-architect;
+}
+@font-face {
+  font-family: roughdraft;
+  src: url(../font/roughdraft/ROUGD___.TTF);
+}
+.roughdraft{
+  font-family: roughdraft;
+}
+@font-face {
+  font-family: dancing_script;
+  src: url(../font/dancing-script/DancingScript-Regular.ttf);
+}
+.dancing_script{
+  font-family: dancing_script;
+}
+@font-face {
+  font-family: dancing_script_b;
+  src: url(../font/dancing-script/DancingScript-Bold.ttf);
+}
+.dancing_script_b{
+  font-family: dancing_script_b;
+}
+a{
+    text-decoration:none;
+    color:#336;
+}
+
+*{
+  color: black;
+}
+jumbotron{
+  border:none !important;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0%;
+  width: 100%;
+}
+nav{
+  color: black;
+  z-index: 3;
+}
+section{
+  min-height: 500px;
+}
+footer{
+  color:#fff;
+  background-color: #CCC;
+  padding: 20px;
+}
+footer h3{color: #000;}
+footer a{color: #000;}
+
+/*---------------------------FORMULARIOS--------------------------------------------*/
+fieldset{
+    max-height: 300px !important;
+    overflow: auto !important;
+}
+legend{
+    font-size: 18px !important;
+}
+label{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+/*----------------------------------MENSAJERIA---------------------------------------------*/
+.message{
+    position:absolute; right: 0px; top: 20%;
+    display: inline-block; max-width: 50%; max-height: 30%;
+    overflow: auto;
+    background: burlywood;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border:1px;
+    z-index: 10;
+    max-width: 40%; max-height: 40%;
+}
+.message-head{
+    width:90%;
+    color: white;
+    height: 26PX;
+    float: right;
+    border: none;
+    text-align: center;
+}
+.message-body{
+    width: 100%;
+    overflow: auto;
+    padding: 10px;
+}
+.close2{
+    background: red;
+    border:none;
+    border-top-left-radius:20px;
+    width:10%;
+    display: inline-block;
+}
+.close2::after{
+	content:"X";
+}
+/*-------------------------------imagenes--------------------------------------------------*/
+.container_img{
+    display: inline-block;
+    border-radius: 12px;
+    padding: 3px;
+    margin: 3px;
+}
+.cerrar-imagen{
+    float: right;
+    color: white;
+    border-radius: 10px;
+    background-color: red;
+    border:none;
+}
+.cerrar-imagen::after{
+	content:"X";
+}
+/*-------------------------------MENU------------------------------------------------------*/
+body{
+}
+nav{
+  position: absolute;
+  left: 3%;
+  top: 50px;
+  width: 94%;
+  border-radius: 10px;
+  z-index: 4;
+  background-color:#ccc;
+}
+.menu>li{
+    text-decoration: none;
+    list-style: none;
+    float: left;
+    text-align: center;
+}
+.menu>li:hover{
+  background-color:orange;
+  border-radius: 10px;
+}
+.menu>li:hover>a{
+  color:white;
+  border-radius: 10px;
+}
+.menu>li>a{
+    text-decoration:none;
+    color: black;
+    font-size: 20px;
+    margin: 2px;
+    padding: 3px;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.dropdown-item:hover{
+  background-color: #06c !important;
+  color: #fff !important;
+}
+/*--------------------------------tabset---------------------------------------------------*/
+.tabset > input[type="radio"] {
+    position: absolute;
+    left: -200vw;
+  }
+.tabset .tab-panel {
+  display: none;
+}
+.tabset > input:first-child:checked ~ .tab-panels > .tab-panel:first-child{
+  display: block;
+}
+.tabset > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
+.tabset > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
+.tabset > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3),
+.tabset > input:nth-child(7):checked ~ .tab-panels > .tab-panel:nth-child(4),
+.tabset > input:nth-child(9):checked ~ .tab-panels > .tab-panel:nth-child(5),
+.tabset > input:nth-child(11):checked ~ .tab-panels > .tab-panel:nth-child(6),
+.tabset > input:nth-child(13):checked ~ .tab-panels > .tab-panel:nth-child(7),
+.tabset > input:nth-child(15):checked ~ .tab-panels > .tab-panel:nth-child(8),
+.tabset > input:nth-child(17):checked ~ .tab-panels > .tab-panel:nth-child(9),
+.tabset > input:nth-child(19):checked ~ .tab-panels > .tab-panel:nth-child(10),
+.tabset > input:nth-child(21):checked ~ .tab-panels > .tab-panel:nth-child(11),
+.tabset > input:nth-child(23):checked ~ .tab-panels > .tab-panel:nth-child(12),
+.tabset > input:nth-child(25):checked ~ .tab-panels > .tab-panel:nth-child(13),
+.tabset > input:nth-child(27):checked ~ .tab-panels > .tab-panel:nth-child(14),
+.tabset > input:nth-child(29):checked ~ .tab-panels > .tab-panel:nth-child(15),
+.tabset > input:nth-child(31):checked ~ .tab-panels > .tab-panel:nth-child(16),
+.tabset > input:nth-child(33):checked ~ .tab-panels > .tab-panel:nth-child(17),
+.tabset > input:nth-child(35):checked ~ .tab-panels > .tab-panel:nth-child(18),
+.tabset > input:nth-child(37):checked ~ .tab-panels > .tab-panel:nth-child(19),
+.tabset > input:nth-child(39):checked ~ .tab-panels > .tab-panel:nth-child(20),
+.tabset > input:nth-child(41):checked ~ .tab-panels > .tab-panel:nth-child(21){
+  display: block;
+}
+  
+  /*
+   Styling
+  */
+  body {
+    font: 16px/1.5em "Overpass", "Open Sans", Helvetica, sans-serif;
+    color: #333;
+    font-weight: 300;
+    background-color:#eee;
+    position: relative !important;
+    top: 0px !important;  
+  }
+  
+.tabset > label {
+  position: relative;
+  display: inline-block;
+  padding: 15px 15px 25px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  cursor: pointer;
+  font-weight: 600;
+}
+  
+.tabset > label::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  bottom: 10px;
+  width: 22px;
+  height: 4px;
+  background: #8d8d8d;
+}
+  
+  .tabset > label:hover,
+  .tabset > input:focus + label {
+    color: #06c;
+  }
+  
+  .tabset > label:hover::after,
+  .tabset > input:focus + label::after,
+  .tabset > input:checked + label::after {
+    background: #06c;
+  }
+  
+  .tabset > input:checked + label {
+    border-color: #ccc;
+    border-bottom: 1px solid #fff;
+    margin-bottom: -1px;
+  }
+  
+  .tab-panel {
+    padding: 30px 0;
+    border-top: 1px solid #ccc;
+  }
+  .carousel-control-prev > span{
+    color: black;
+  }
+  /*__________________________________________________________________________*/
+.goog-te-gadget-icon{
+  display: none !important;
+}
+.goog-te-menu-value{
+  font-size: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.goog-te-gadget-simple{
+  background: none !important;
+  border: none !important;
+}
+.goog-te-banner-frame{
+  display:none !important;
+}

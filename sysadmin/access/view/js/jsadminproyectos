@@ -1,0 +1,363 @@
+$(document).ready(function(){
+    $("select").addClass("form-control form-control-sm");
+    $("#guardar").on({
+        "click":function(){
+            let datos = info.get_data(['proyecto'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action': datos.action,
+                    'valores': jvalores,
+                }
+            })
+            .done(function(resp){
+                $.notify(resp, "info");
+                buscar_projectos();
+                $(".proyecto").val("");
+                $("#name").focus();
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus)
+            });
+        }
+    });
+    $("#addproyecto").on({
+        "click":function(){
+            $(".proyecto").val("");
+            $("#guardar").show();
+            $("#editar").hide();
+            $('#myModal').modal('show');
+            $("#name").focus();
+        }
+    });
+    $("#cm").on({
+        "click":function(){
+            $('#myModal').modal('hide');
+        }
+    });
+    $("#cm1").on({
+        "click":function(){
+            $('#myModal-etapas').modal('hide');
+        }
+    });
+    $("#editar").on({
+        "click":function(){
+            let datos = info.get_data(['proyecto'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action': datos.action,
+                    'valores': jvalores,
+                }
+            })
+            .done(function(resp){
+                $.notify(resp, "info");
+                buscar_projectos();
+                $(".proyecto").val("");
+                $('#myModal').modal('show');
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus)
+            });
+        }
+    });
+    listar_categorias();
+    buscar_projectos();
+});
+//funcion de busqueda al inicio y luego de editar o eliminar proyecto y eliminar categoria___________________________
+function buscar_projectos(){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{'action':'listar_proyectos'}
+    })
+    .done(function(resp){
+        $("#area_proyectos").html(resp);
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}
+//funcion usada al principio para traer las categorias a la lista_________________________________________
+function listar_categorias(){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{'action':'listar_categorias'}
+    })
+    .done(function(resp){
+        $("#category").html("");
+        let opt = JSON.parse(resp);
+        let hopt=`<option value=''>--</option>`;
+        for(let i=0;i<opt.length; i++){
+            hopt=`${hopt}<option value="${opt[i]['id_category']}">${opt[i]['ct_name']}</option>`;
+        }
+        $("#category").append(hopt);
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}
+//funcion de eliminar proyectos__________________________________________________________________
+function eliminar_proyecto(a){
+    if (confirm("¿DESEA ELIMINAR ESTE PROYECTO?")){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/projects_controller.php`,
+            data:{
+                'action' : 'eliminar_proyecto',
+                'valores': a.name,
+            }
+        })
+        .done(function(resp){
+            $.notify(resp, "info");
+            buscar_projectos();
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    }
+}
+//funcion activada en el boton edicion de la lista de proyectos, inicia la edicion_________________________
+function editar_proyecto(t){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{
+            'action' : 'iniciar_edicion',
+            'valores': t.name,
+        }
+    })
+    .done(function(resp){
+        resp=JSON.parse(resp);
+        $("#category").val(resp[0]['pr_category']);
+        $("#current_stage").val(resp[0]['pr_current_stage']);
+        $("#description").val(resp[0]['pr_description']);
+        $("#direction").val(resp[0]['pr_direction']);
+        $("#name").val(resp[0]['pr_name']);
+        $("#show").val(resp[0]['pr_show']);
+        $("#stage_number").val(resp[0]['pr_stage_number']);
+        $("#start_date").val(resp[0]['pr_start_date']);
+        $("#status").val(resp[0]['pr_status']);
+        $("#stop_date").val(resp[0]['pr_stop_date']);
+        $("#guardar").hide();
+        $("#editar").show();
+        $('#myModal').modal('show');
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+//funcion del boton etapas del proyecto del section_________________________________________________________
+function llamar_editar_etapas(t){
+    editar_etapas(t.name);
+    $("#myModal-etapas").modal('show');
+}
+//funcion para mostrar los datos de las etapas, llamada desde 
+//llamar etapas, actualizar etapas y eliminar etapas, 
+//ESTA ES LA QUE MUESTRA LA ESTRUCTURA DE LOS DATOS DE LAS ETAPAS 
+function editar_etapas(proyecto){
+    $("#id_proyecto").val(proyecto);
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{
+            'action' : 'buscar_etapas',
+            'valores': proyecto,
+        }
+    })
+    .done(function(resp){
+        resp=JSON.parse(resp);
+        $(".modal-title").text(`${resp[0][0]['ct_name']}: ${resp[0][0]['pr_name']}`);
+        $("#pr_description").text(resp[0][0]['pr_description']);
+        $("#pr_direction").text(resp[0][0]['pr_direction']);
+        $("#pr_start_date").text(resp[0][0]['pr_start_date']);
+        $("#pr_stop_date").text(resp[0][0]['pr_stop_date']);
+        let option_etapas="";
+        $(".pestanna_etapa").remove();
+        for(let i=0;i<resp[0][0]['pr_stage_number'];i++){
+            option_etapas=`${option_etapas}<input type="radio" name="tabset" id="tab${i}" aria-controls="contacto" class='pestanna_etapa'>
+            <label for="tab${i}" class='pestanna_etapa'>Etapa ${i+1}</label>`;
+        }
+        option_etapas=`${option_etapas}<div class="tab-panels">`;
+        for(let i=0;i<resp[0][0]['pr_stage_number'];i++){
+            j=i+1;
+            option_etapas=`${option_etapas}<div class="tab-panel">
+                <div class="container row">
+                    <h6 class="col-xxl-6 col-xl-6 col-lg-8 col-sm-12">ETAPA ${j} DEL PROYECTO</h6>
+                    <button name="${j}" class="btn btn-primary col-xxl-3 col-xl-3 col-lg-2 col-sm-12" onclick="actualizar_etapa(this)">Guardar (Etp ${j})</button>
+                    <button name="${j}" class="btn btn-danger btn-sm col-xxl-3 col-xl-3 col-lg-2 col-sm-12" onclick="eliminar_etapa(this)">Eliminar (Etp ${j})</button>
+           
+                    <label class="col-xxl-6 col-xl-6 col-lg-6 col-sm-12" for="name_stage${j}">Nombre de la Etapa:</label>
+                    <input type="search" autocomplete="off" name="valname_stage${j}" id="name_stage${j}" class="form-control form-control-sm"/>
+           
+                    <label class="col-xxl-6 col-xl-6 col-lg-6 col-sm-12" for="description_stage${j}">Descripción de la Etapa:</label>
+                    <input type="search" autocomplete="off" name="valdescription_stage${j}" id="description_stage${j}" class="form-control form-control-sm">
+           
+                    <label class="col-xxl-6 col-xl-6 col-lg-6 col-sm-12" for="condition_stage${j}">Condiciones de la Etapa </label>
+                    <textarea type="search" autocomplete="off" name="valcondition_stage${j}" id="condition_stage${j}" class="form-control form-control-sm" placeholder="en caso de que se deba cumplir alguna condición especifica para avanzar con la etapa indiquelo aca (condiciónes climaticas / requisitos legales, etc)" ></textarea>
+           
+                    <form onsubmit="return false" method="post" enctype="multipart/form-data" id="formUpload${j}">
+                        <input type="hidden" id="ndi_${j}"/>
+                        <label class="col-12" for="photo_stage${j}">Seleccione las Imagenes a Mostrar</label>
+                        <input multiple type="file" accept="image/*" name="${j}" id="photo_stage${j}" onchange="imagenetapa(event, 'fotografia_etapa_${j}', this)">
+                        <div id="fotografia_etapa_${j}" class="row"></div>
+                    </form>
+                </div>
+            </div>`;
+        }
+        option_etapas=`${option_etapas}</div>`;
+        $(".tabset").html(option_etapas);
+        for(let i=0; i<resp[1].length; i++){
+            $(`#name_stage${resp[1][i]['n_stage']}`).val(resp[1][i]['name_stage']);
+            $(`#description_stage${resp[1][i]['n_stage']}`).val(resp[1][i]['description_stage']);
+            $(`#condition_stage${resp[1][i]['n_stage']}`).val(resp[1][i]['condition_stage']);
+        }
+        for(let i=0; i<resp[3].length; i++){
+            $(`#${resp[3][i]}`).html(resp[2][i]);
+        }
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+//funcion llamada para guadar o actualizar datos de la etapa desde el modal desplegado
+function actualizar_etapa(t){
+    let nombre_etapa=$(`#name_stage${t.name}`).val();
+    let descripcion_etapa=$(`#description_stage${t.name}`).val();
+    let condiciones_etapa=$(`#condition_stage${t.name}`).val();
+    let proyecto=$("#id_proyecto").val();
+    let etapa = t.name;
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{
+            'action'     :'actualizar_etapa',
+            'nombre'     :nombre_etapa,
+            'descripcion':descripcion_etapa,
+            'condiciones':condiciones_etapa,
+            'etapa'      :etapa,
+            'proyecto'   :proyecto,
+        }
+    })
+    .done(function(resp){
+        actualizar_imagenes_etapa(proyecto, etapa);
+        $.notify(resp, "info");
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });   
+}
+//atualiza las imagenes de la etapa y muestra todo en pantalla
+function actualizar_imagenes_etapa(proy, etap){
+    $(`#photo_stage${etap}`).remove();
+    fd=new FormData($(`#formUpload${etap}`)[0]);
+    fd.append("proy",proy);
+    fd.append("etap",etap);
+    fd.append("action","actualizar_imagen");
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:fd,
+        contentType: false,
+        processData: false,
+    })
+    .done(function(resp){
+        console.log(resp);
+        $.notify(resp, "info");
+        editar_etapas(proy);
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}
+//funcion usada por el boton eliminar 
+function eliminar_etapa(t){
+    if(confirm("¿DESEA ELIMINAR ESTA ETAPA?")){
+        let proyecto=$("#id_proyecto").val();
+        $.ajax({
+            type: "POST",
+            url: `../../controller/projects_controller.php`,
+            data:{
+                'action'  :'eliminar_etapa',
+                'etapa'   :t.name,
+                'proyecto':$("#id_proyecto").val(),
+            }
+        })
+        .done(function(resp){
+            $.notify(resp, "info");
+            editar_etapas(proyecto);
+            buscar_projectos();
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus)
+        });
+    }
+}
+function imagenetapa(event, querySelector, t){
+    const input = event.target;
+    let n=t.name;
+    let i=t.id;
+    nie=$(`#ndi_${t.name}`).val();
+    if(nie==""){nie=1;}else{nie++;}
+    $(`#ndi_${n}`).val(nie);
+    onc=$(t).attr("onchange");
+    $(t).css({"display":"none"});  
+    $(t).parent().prepend(`<input type="file" multiple accept="image/*" name="${n}" id="${i}" onchange="${onc}">`);
+    $(t).parent().append(`<input type="hidden" name="tfotos_${nie}" id="tfotos_${nie}" value="${input.files.length}" />`);
+    for(i=0;i<input.files.length;i++){
+        file = input.files[i];
+        objectURL = URL.createObjectURL(file);
+        ima=`<div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-12 row">
+		<img src="${objectURL}" class="col-xxl-4 col-xl-4 col-lg-6 col-sm-12"></img>
+        <input type="search" placeholder="DESCRIPCION DE FOTOGRAFIA" id="description_file_${nie}_${i}" name="description_file_${nie}_${i}" class="desfil${n} form-control form-control-sm"/>
+		</div>`;
+    	$(`#${querySelector}`).append(ima);
+        $(`#formUpload${t.name}`).append(t);
+    }
+    t.name=`photo${nie}[]`;
+    t.id=`photo${nie}`;
+}
+function delphoto(t){
+    if (confirm("¿desea eliminar esta imagen?")){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/projects_controller.php`,
+            data:{
+                'action' : 'delete_photo',
+                'imagen': t,
+            }
+        })
+        .done(function(resp){
+            $.notify(resp, "info");
+            editar_etapas($("#id_proyecto").val());
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus)
+        });
+    }
+}
+function update_description_fotografia(t,id_file){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/projects_controller.php`,
+        data:{
+            'action' : 'update_description_fotografia',
+            'imagen': id_file,
+            'descripcion':t.value,
+        }
+    })
+    .done(function(resp){
+        $.notify(resp, "info");
+        editar_etapas($("#id_proyecto").val());
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus)
+    });
+}

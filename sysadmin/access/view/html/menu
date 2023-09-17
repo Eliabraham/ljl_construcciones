@@ -1,0 +1,33 @@
+<script src="../js/jsmenu?v=1.0"></script>
+    <div>
+        <button class="navbar-toggler btn border border-primary" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarToggleExternalContent" class="collapse">    
+            <ul class=" col-12 row menu">
+                <li class="col-12 col-sm-6 col-md-3 nav-item" style="float:left">
+                    <a href="#" class="nav-link navice">Corporativa</a>
+                </li>
+                <li class="col-12 col-sm-6 col-md-3 nav-item" style="float:left">
+                    <a href="#" class="nav-link navice">Personal</a>
+                </li>
+                <li class="col-12 col-sm-6 col-md-3 nav-item" style="float:left">
+                    <a href="#" class="nav-link navice">Clientes</a>
+                </li>
+                <li class="col-12 col-sm-6 col-md-3 nav-item" style="float:left">
+                    <a href="#" class="nav-link navice">Proyectos</a>
+                </li>
+                <li class="col-12 col-sm-6 col-md-3 nav-item" style="float:left">
+                    <a href="#" class="nav-link navice">Categorias</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $(".navbar-toggler").click(function(){
+                $("#navbarToggleExternalContent").slideToggle();
+            });
+        });
+    </script>
+    

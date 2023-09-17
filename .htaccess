@@ -1,0 +1,8 @@
+
+# HTID:20996486: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 0
+php_flag display_errors off
+
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:20996486:
+ErrorDocument 404 /404.html
+ErrorDocument 500 /404.html

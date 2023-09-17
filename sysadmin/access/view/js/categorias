@@ -1,0 +1,168 @@
+$(document).ready(function(){
+    $("#addcategoria").on({
+        "click":function(){
+            $("#guardar").css({"display":"inline-block"});
+            $("#editar").css({"display":"none"});
+            $("#name").val("");
+            $("#description").val("");
+            $("#fotografia1").html("");
+            $("#fotografia2").html("");
+    
+            $('#myModal').modal('toggle');    
+        }
+    });
+    $("#cm").on({
+        "click":function(){
+            $('#myModal').modal('toggle');
+        }
+    });
+    $("#guardar").on({
+        "click":function(){
+            let datos = info.get_data(['categoria'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action' : datos.action,
+                    'valores': jvalores,
+                }
+            })
+            .done(function(resp){
+                $.notify(resp, "info");
+                guardar_fotografia();
+                buscar_categorias();
+                $('#myModal').modal('toggle');
+                $(".categoria").val("");
+                $("#image1, #image2").val("");
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+        }
+    });
+    $("#editar").on({
+        "click":function(){
+            let datos = info.get_data(['categoria'],this);
+            info.request_missing_data(datos.err);
+            let jvalores = JSON.stringify(datos.written);
+            $.ajax({
+                type: "POST",
+                url: `../../controller/${datos.controller}_controller.php`,
+                data:{
+                    'action' : datos.action,
+                    'valores': jvalores,
+                }
+            })
+            .done(function(resp){
+                guardar_fotografia();
+                $.notify(resp, "info");
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus);
+            })
+            
+        }
+    });
+    $("#name").on({
+        "keyup":function(){
+            va = this.value;
+            $(this).val(formato.mayini(va));
+        }
+    });
+    buscar_categorias();
+});
+function add_ima_1(){
+    $("#fotografia1").html("");
+    previewImage(event, 'fotografia1');
+    $(".container_img").removeClass("col-2").removeClass("col-12").addClass("col-12");
+    $(".cerrar-imagen").remove();
+}
+function add_ima_2(){
+    $("#fotografia2").html("");
+    previewImage(event, 'fotografia2');
+    $(".container_img").removeClass("col-2").removeClass("col-12").addClass("col-12");
+    $(".cerrar-imagen").remove();
+}
+function guardar_fotografia(){
+    var formData = new FormData($('#formUpload_cat')[0]);
+    formData.append("acc","categoria");
+    try{
+        $.ajax({
+            type: "POST",
+            url: `../../controller/imagen_controller.php`,
+            data: formData,
+            contentType: false,
+            processData: false,
+        }).done(
+            function(respuesta){
+                buscar_categorias();
+                $('#myModal').modal('toggle');
+                $(".categoria").val("");
+                $("#image1, #image2").val("");
+                $.notify(respuesta, "info");
+            }
+        ).fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        });
+    }catch (error){
+        console.error(error);
+    }
+}
+function buscar_categorias(){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/category_controller.php`,
+        data:{action:'buscar_categoria'},
+    }).done(
+        function(resp){
+            $("#listado_categorias").html(resp);
+            $('.carousel').carousel('cycle');
+        }
+    ).fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}
+function eliminar_categoria(a){
+    if (confirm("¿DESEA ELIMINAR ESTA CATEGORIA?")){
+        $.ajax({
+            type: "POST",
+            url: `../../controller/category_controller.php`,
+            data:{
+                'action' : 'eliminar_categoria',
+                'valores': a.name,
+            }
+        })
+        .done(function(resp){
+            $.notify(resp, "info");
+            buscar_categorias();
+        })
+        .fail(function(jqXHR, textStatus){
+            formato.error_ajax(jqXHR, textStatus);
+        })
+    }
+}
+function iniciar_edicion(a){
+    $.ajax({
+        type: "POST",
+        url: `../../controller/category_controller.php`,
+        data:{
+            'action' : 'iniciar_edicion',
+            'valores': a.name,
+        }
+    })
+    .done(function(resp){
+        resp=JSON.parse(resp);
+        $("#name").val(resp[0]);
+        $("#description").val(resp[1]);
+        $("#fotografia1").html(resp[2]);
+        $("#fotografia2").html(resp[3]);
+        $("#editar").css({"display":"inline-block"});
+        $("#guardar").css({"display":"none"});
+        $('#myModal').modal('toggle');
+    })
+    .fail(function(jqXHR, textStatus){
+        formato.error_ajax(jqXHR, textStatus);
+    })
+}

@@ -1,0 +1,14 @@
+<div class='container'>
+    <div class="row">
+        <h1 class="col-9">ADMINISTRACION DE IDIOMAS</h1>
+        <div style="border:double; border-radius: 15px; padding-top: 12px; margin-top: 20px; padding-bottom: 20px;" class="container row">
+            <h4>iNGRESE LOS IDIOMAS EN LAS QUE DESEA APARESCA SU PAGINA, RECUERDE QUE DESPUES DEBE INGRESAR LAS TRADUCCIONES</h4>
+            <label class="col-12 col-xm-12">
+                Idioma:
+                <input type="search" autocomplete="off" name="valIdioma" id="Icono" class="proyecto form-control form-control-sm">
+            </label>
+            <input type="file" accept="image/*" name="foto" id="foto" onchange="previewImage(event, 'fotografia_carnet')">
+            <div id="fotografia_carnet""></div>    
+        </div>
+    </div>
+</div>

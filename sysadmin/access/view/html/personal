@@ -1,0 +1,227 @@
+<script src="../js/personal?v=1.2"></script>
+<div class='container my-3'>
+    <div class="row">
+        <h1 class="col-xxl-9 col-xl-9 col-lg-9 col-sm-12 h3 d-inline-block">PLANILLA DE PERSONAL</h1>
+        <button class="col-xxl-3 col-xl-3 col-lg-3 col-sm-10 btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" id="addpersonal">Agregar</button>
+        <div id="listado_personal" class="row col-12 my-3"></div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro de Integrantes</h5>
+                <button type="button" class="close" id="cm" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row border">
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="name">Nombre:</label>
+                            <input type="search" maxlength="50" autocomplete="off" name="valname" id="name" class="form-control form-control-sm dpersonal requerido"/>
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="position">Cargo:</label>
+                            <input type="search" maxlength="50" autocomplete="off" name="valposition" id="position" class="form-control form-control-sm dpersonal requerido"/>
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-6 col-sm-12">
+                            <label for="ingles">Nivel de Ingles:</label> 
+                            <select name="valingles" id="ingles" class="dpersonal requerido">
+                                <option value="">--</option>
+                                <option>nada</option>
+                                <option>bajo</option>
+                                <option>intermedio</option>
+                                <option>fluido</option>
+                                <option>nativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xxl-4 col-xl-4 col-lg-4 col-sm-12 sencible">
+                            <label for="user">Usuario:</label>
+                            <input type="search" maxlength="12" autocomplete="off" name="valuser" id="user" class="form-control form-control-sm dpersonal requerido"/>
+                        </div>
+                        <form action="#" method="post" class="col-xxl-8 col-xl-8 col-lg-8 col-sm-12 sencible">
+                            <div class="row">
+                                <div class="form-group col-xxl-6 col-xl-6 col-lg-6 col-sm-12">
+                                    <label for="password">Contraseña:</label>
+                                    <input type="password" name="valpassword" maxlength="40" autocomplete="off" id="password" class="form-control form-control-sm dpersonal requerido">
+                                </div>
+                                <div class="form-group col-xxl-6 col-xl-6 col-lg-6 col-sm-12">
+                                    <label for="confirm_password">Confirme Contraseña:</label>
+                                    <input type="password" maxlength="40" autocomplete="off" id="confirm_password" class="form-control form-control-sm requerido">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tabset">
+                        <!-- Tab 0 -->
+                        <input type="radio" name="tabset" id="tab5" aria-controls="contacto" checked>
+                        <label for="tab5">Fotografia</label>
+                        <!-- Tab 1 -->
+                        <input type="radio" name="tabset" id="tab1" aria-controls="contacto">
+                        <label for="tab1">Contacto</label>
+                        <!-- Tab 2 -->
+                        <input type="radio" name="tabset" id="tab2" aria-controls="estudio">
+                        <label for="tab2">Estudios</label>
+                        <!-- Tab 3 -->
+                        <input type="radio" name="tabset" id="tab3" aria-controls="experiencias">
+                        <label for="tab3">Experiencia</label>
+                        <!-- Tab 4 -->
+                        <input type="radio" name="tabset" id="tab4" aria-controls="proyectos">
+                        <label for="tab4">Proyectos</label>
+                        <div class="tab-panels">
+                            <div class="tab-panel">
+                                <form onsubmit="return false" method="post" enctype="multipart/form-data" id="formUpload">
+                                    <input type="file" accept="image/*" id="imagen" name="image" onchange="add_ima_cv()">
+                                </form>
+                                <div id="fotografia_carnet"></div>
+                            </div>
+                            <div class="tab-panel">
+                                <fieldset class="row">
+                                    <table class="table table-responsive table-striped table-hover table-sm " id="t_contacto">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th><label for="ctipo">Tipo</label></th>
+                                                <th><label for="contacto">Valor</label></th>
+                                                <th><label for="horario">Horario</label></th>
+                                                <th class="sencible">accion</th>
+                                            </tr>
+                                            <tr class="sencible">
+                                                <td>
+                                                    <select name="valctipo" id="ctipo" class="contacto">
+                                                        <option value="">--</option>
+                                                        <option>Movil de Oficina</option>
+                                                        <option>Fijo de Oficina</option>
+                                                        <option>Email Empresarial</option>
+                                                        <option>Red Social</option>
+                                                        <option>Movil Personal</option>
+                                                        <option>Fijo Personal</option>
+                                                        <option>Email Personal</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="search" maxlength="50" autocomplete="off" name="valcontacto" id="contacto" class="form-control form-control-sm contacto">
+                                                </td>
+                                                <td>
+                                                    <input type="search" maxlength="20" autocomplete="off" name="valhorario" id="horario" class="form-control form-control-sm contacto">
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm" id="add_contacto" name="add_contacto">+</button>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody contenteditable></tbody>
+                                    </table>
+                                </fieldset>
+                            </div>
+                            <div class="tab-panel">
+                                <fieldset class="row">
+                                    <table class="table table-responsive table-striped table-hover table-sm" id="t_estudios">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th><label for="instituto">Instituto</label></th>
+                                                <th><label for="grado">Grado</label></th>
+                                                <th><label for="año">Año</label></th>
+                                                <th class="sencible">Accion</th>
+                                            </tr>
+                                            <tr class="sencible">
+                                                <td>
+                                                    <input type="search" maxlength="50" autocomplete="off" name="valinstituto" id="instituto" class="form-control form-control-sm estudio">
+                                                </td>
+                                                <td>
+                                                    <input type="search" maxlength="50" autocomplete="off" name="valgrado" id="grado" class="form-control form-control-sm estudio">
+                                                </td>
+                                                <td>
+                                                    <input type="search" autocomplete="off" name="valaño" id="año" maxlength="10" class="form-control form-control-sm estudio">
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm" id="add-studies" name="add-studies">+</button>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody contenteditable></tbody>
+                                    </table>
+                                </fieldset>                        
+                            </div>
+                            <div  class="tab-panel">
+                                <fieldset class="row">
+                                    <table class="table table-responsive table-striped table-hover table-sm" id="t_experiencia">
+                                        <thead>
+                                            <tr>
+                                                <th><label for="empresa">Empresa</label></th>
+                                                <th><label for="cargo">Cargo</label></th>
+                                                <th><label for="area">Area</label></th>
+                                                <th><label for="años">Años</label></th>
+                                                <th><label for="logros">Logros</label></th>
+                                                <th class="sencible">Acc.</th>
+                                            </tr>
+                                            <tr class="sencible">
+                                                <td>
+                                                    <textarea name="valempresa" maxlength="50" id="empresa" rows="3" class="form-control form-control-sm experiencia"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valcargo" maxlength="50" id="cargo" rows="3" class="form-control form-control-sm experiencia"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valarea" maxlength="50" id="area" rows="3" class="form-control form-control-sm experiencia"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valaños" id="años" rows="3" maxlength="10" class="form-control form-control-sm experiencia"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="vallogros" maxlength="250" id="logros" rows="3" class="form-control form-control-sm experiencia"></textarea>
+                                                </td>
+                                                <td><button class="btn btn-primary btn-sm" id="add_work_experience" name="add_work_experience">+</button></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody contenteditable></tbody>
+                                    </table>
+                                </fieldset>
+                            </div>
+                            <div class="tab-panel">
+                                <fieldset class="row">
+                                    <table class="table table-responsive table-striped table-hover table-sm" id="t_proyecto">
+                                        <thead>
+                                            <tr>
+                                                <th><label for="cliente">Cliente</label></th>
+                                                <th><label for="nombre">Nombre</label></th>
+                                                <th><label for="descripcion">Descripcion</label></th>
+                                                <th><label for="participacion">Participacion</label></th>
+                                                <th><label for="lpogros">Logros</label></th>
+                                                <th class="sencible">Acc.</th>
+                                            </tr>
+                                            <tr class="sencible">
+                                                <td>
+                                                    <textarea name="valcliente" maxlength="50" id="cliente" rows="3" class="form-control form-control-sm proyecto"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valnombre" maxlength="300" id="nombre" rows="3" class="form-control form-control-sm proyecto"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valdescripcion" maxlength="300" id="descripcion" rows="3" class="form-control form-control-sm proyecto"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valparticipacion" maxlength="300" id="participacion" rows="3" class="form-control form-control-sm proyecto"></textarea>
+                                                </td>
+                                                <td>
+                                                    <textarea name="valplogros" maxlength="300" id="lpogros" rows="3" class="form-control form-control-sm proyecto"></textarea>
+                                                </td>
+                                                <td ><button class="btn btn-primary btn-sm" id="add_projects" name="add_projects">+</button></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody contenteditable></tbody>
+                                    </table>        
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <center>
+                        <button class="btn btn-primary btn-xm col-offset-3 col-6" id="guardar" name="PersonalResume">GUARDAR</button>
+                        <button class="btn btn-primary btn-xm col-offset-3 col-6" id="editar" name="PersonalResume">EDITAR</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

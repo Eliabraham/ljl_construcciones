@@ -1,0 +1,19 @@
+$(document).ready(function(){
+    $(".navice").on({
+        "click":function(){
+            $.ajax({
+                type: "POST",
+                url: `../../controller/direccion_controller.php`,
+                data: {'action':$(this).text()}
+            })
+            .done(function(resp){
+                $("section").html(resp);
+                console.log(resp);
+            })
+            .fail(function(jqXHR, textStatus){
+                formato.error_ajax(jqXHR, textStatus)
+            });
+
+        }
+    })
+});
